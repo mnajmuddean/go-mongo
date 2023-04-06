@@ -22,7 +22,7 @@ type Person struct {
 
 func CreatePerson(client *mongo.Client, person models.Person) error {
 
-	// Get a handle to the "people" collection in the "test" database
+	// Get a handle to the "Person" collection in the "myDB" database
 	collection := client.Database("myDB").Collection("Person")
 
 	docs := []interface{}{
@@ -65,7 +65,7 @@ func CreatePerson(client *mongo.Client, person models.Person) error {
 
 func ReadPerson(client *mongo.Client, person models.Person) error {
 
-	// Get a handle to the "people" collection in the "test" database
+	// Get a handle to the "Person" collection in the "myDB" database
 	collection := client.Database("myDB").Collection("Person")
 
 	filter := bson.D{{"country", "Hong Kong"}}
@@ -92,10 +92,11 @@ func ReadPerson(client *mongo.Client, person models.Person) error {
 
 func UpdatePerson(client *mongo.Client, person models.Person) error {
 
-	// Get a handle to the "people" collection in the "test" database
+	// Get a handle to the "Person" collection in the "myDB" database
 	collection := client.Database("myDB").Collection("Person")
 
-	id, _ := primitive.ObjectIDFromHex("642e6844fa3bceb1fda83710") //convert hexadecimal to objectID value
+	//convert hexadecimal to objectID value
+	id, _ := primitive.ObjectIDFromHex("642e6844fa3bceb1fda83710")
 	filter := bson.D{{"_id", id}}
 	update := bson.D{{"$set", bson.D{{"age", 30}}}}
 
@@ -112,7 +113,7 @@ func UpdatePerson(client *mongo.Client, person models.Person) error {
 
 func DeletePerson(client *mongo.Client, person models.Person) error {
 
-	// Get a handle to the "people" collection in the "test" database
+	// Get a handle to the "Person" collection in the "myDB" database
 	collection := client.Database("myDB").Collection("Person")
 	id, _ := primitive.ObjectIDFromHex("642e6844fa3bceb1fda83712")
 	filter := bson.D{{"_id", id}}
@@ -130,7 +131,7 @@ func DeletePerson(client *mongo.Client, person models.Person) error {
 
 func UseQueryOperators(client *mongo.Client, person models.Person) error {
 
-	// Get a handle to the "people" collection in the "test" database
+	// Get a handle to the "Person" collection in the "myDB" database
 	collection := client.Database("myDB").Collection("Person")
 
 	filter := bson.D{{"age", bson.D{{"$lte", 24}}}}

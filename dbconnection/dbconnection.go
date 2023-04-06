@@ -11,7 +11,7 @@ var client *mongo.Client
 
 func GetMongoClient(url string, port string) (*mongo.Client, error) {
 
-	// Set client options
+	// Set client options and take url & port string as input variables from main
 	clientOptions := options.Client().ApplyURI("mongodb://" + url + ":" + port)
 
 	// Connect to MongoDB

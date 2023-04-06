@@ -9,6 +9,8 @@ import (
 
 func main() {
 
+	// // Get only one client (GetMongoClient)
+
 	client, serveErr := dbconnection.GetMongoClient("localhost", "27017")
 	if serveErr != nil {
 		panic(serveErr)
@@ -17,11 +19,11 @@ func main() {
 
 	// Call the CreatePerson function
 
-	// err := handlers.CreatePerson(client, models.Person{})
+	err := handlers.CreatePerson(client, models.Person{})
 
-	// if err != nil {
-	// 	panic(err)
-	// }
+	if err != nil {
+		panic(err)
+	}
 
 	// // Call the ReadPerson function
 
@@ -43,9 +45,9 @@ func main() {
 	// }
 
 	// // Call the UseQueryOperators function
-	err := handlers.UseQueryOperators(client, models.Person{})
-	if err != nil {
-		panic(err)
-	}
+	// err := handlers.UseQueryOperators(client, models.Person{})
+	// if err != nil {
+	// 	panic(err)
+	// }
 
 }
