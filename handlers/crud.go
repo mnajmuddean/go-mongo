@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 
-	"go-mongodb/dbconnection"
 	"go-mongodb/models"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -21,12 +20,7 @@ type Person struct {
 	Country string             `json:"country,omitempty" bson:"country,omitempty"`
 }
 
-func CreatePerson(models.Person) error {
-	// Get a connection to the database
-	client, err := dbconnection.GetMongoClient()
-	if err != nil {
-		panic(err)
-	}
+func CreatePerson(client *mongo.Client, person models.Person) error {
 
 	// Get a handle to the "people" collection in the "test" database
 	collection := client.Database("myDB").Collection("Person")
@@ -34,7 +28,7 @@ func CreatePerson(models.Person) error {
 	docs := []interface{}{
 		Person{Name: "Muhammad Najmuddin", Age: 23, Country: "Malaysia"},
 		Person{Name: "Bryan", Age: 24, Country: "Malaysia"},
-		Person{Name: "Ahmas", Age: 25, Country: "Indonesia"},
+		Person{Name: "Ahmad", Age: 25, Country: "Indonesia"},
 		Person{Name: "Shah", Age: 26, Country: "Singapore"},
 		Person{Name: "Wong", Age: 23, Country: "Thailand"},
 		Person{Name: "Ali", Age: 24, Country: "Malaysia"},
@@ -69,20 +63,15 @@ func CreatePerson(models.Person) error {
 	return nil
 }
 
-func ReadPerson(models.Person) error {
-	// Get a connection to the database
-	client, err := dbconnection.GetMongoClient()
-	if err != nil {
-		panic(err)
-	}
+func ReadPerson(client *mongo.Client, person models.Person) error {
 
 	// Get a handle to the "people" collection in the "test" database
 	collection := client.Database("myDB").Collection("Person")
 
-	filter := bson.D{{"country", "Malaysia"}}
+	filter := bson.D{{"country", "Hong Kong"}}
 
 	var result Person
-	err = collection.FindOne(context.TODO(), filter).Decode(&result)
+	err := collection.FindOne(context.TODO(), filter).Decode(&result)
 
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
@@ -101,17 +90,12 @@ func ReadPerson(models.Person) error {
 	return nil
 }
 
-func UpdatePerson(models.Person) error {
-	// Get a connection to the database
-	client, err := dbconnection.GetMongoClient()
-	if err != nil {
-		panic(err)
-	}
+func UpdatePerson(client *mongo.Client, person models.Person) error {
 
 	// Get a handle to the "people" collection in the "test" database
 	collection := client.Database("myDB").Collection("Person")
 
-	id, _ := primitive.ObjectIDFromHex("642a888c74c81a173a34883a") //convert hexadecimal to objectID value
+	id, _ := primitive.ObjectIDFromHex("642e6844fa3bceb1fda83710") //convert hexadecimal to objectID value
 	filter := bson.D{{"_id", id}}
 	update := bson.D{{"$set", bson.D{{"age", 30}}}}
 
@@ -126,16 +110,11 @@ func UpdatePerson(models.Person) error {
 	return nil
 }
 
-func DeletePerson(models.Person) error {
-	// Get a connection to the database
-	client, err := dbconnection.GetMongoClient()
-	if err != nil {
-		panic(err)
-	}
+func DeletePerson(client *mongo.Client, person models.Person) error {
 
 	// Get a handle to the "people" collection in the "test" database
 	collection := client.Database("myDB").Collection("Person")
-	id, _ := primitive.ObjectIDFromHex("642a888c74c81a173a34883a")
+	id, _ := primitive.ObjectIDFromHex("642e6844fa3bceb1fda83712")
 	filter := bson.D{{"_id", id}}
 
 	result, err := collection.DeleteOne(context.TODO(), filter)
@@ -149,12 +128,7 @@ func DeletePerson(models.Person) error {
 	return nil
 }
 
-func UseQueryOperators(models.Person) error {
-	// Get a connection to the database
-	client, err := dbconnection.GetMongoClient()
-	if err != nil {
-		panic(err)
-	}
+func UseQueryOperators(client *mongo.Client, person models.Person) error {
 
 	// Get a handle to the "people" collection in the "test" database
 	collection := client.Database("myDB").Collection("Person")

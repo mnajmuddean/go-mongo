@@ -7,10 +7,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func GetMongoClient() (*mongo.Client, error) {
+var client *mongo.Client
+
+func GetMongoClient(url string, port string) (*mongo.Client, error) {
 
 	// Set client options
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	clientOptions := options.Client().ApplyURI("mongodb://" + url + ":" + port)
 
 	// Connect to MongoDB
 	client, err := mongo.Connect(context.Background(), clientOptions)
