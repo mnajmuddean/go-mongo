@@ -11,43 +11,27 @@ func main() {
 
 	// // Get only one client (GetMongoClient)
 
-	client, serveErr := dbconnection.GetMongoClient("localhost", "27017")
-	if serveErr != nil {
-		panic(serveErr)
+	client, err := dbconnection.GetMongoClient("localhost", "27017")
+	if err != nil {
+		panic(err)
 	}
 	defer client.Disconnect(context.Background())
 
 	// Call the CreatePerson function
 
-	err := handlers.CreatePerson(client, models.Person{})
+	handlers.CreatePerson(client, models.Person{})
 
-	if err != nil {
-		panic(err)
-	}
+	// Call the ReadPerson function
 
-	// // Call the ReadPerson function
-
-	// err := handlers.ReadPerson(client, models.Person{})
-	// if err != nil {
-	// 	panic(err)
-	// }
+	handlers.ReadPerson(client, models.Person{})
 
 	// // Call the UpdatePerson function
-	// err := handlers.UpdatePerson(client, models.Person{})
-	// if err != nil {
-	// 	panic(err)
-	// }
+	handlers.UpdatePerson(client, models.Person{})
 
 	// // Call the DeletePerson function
-	// err := handlers.DeletePerson(client, models.Person{})
-	// if err != nil {
-	// 	panic(err)
-	// }
+	handlers.DeletePerson(client, models.Person{})
 
-	// // Call the UseQueryOperators function
-	// err := handlers.UseQueryOperators(client, models.Person{})
-	// if err != nil {
-	// 	panic(err)
-	// }
+	// Call the UseQueryOperators function
+	handlers.UseQueryOperators(client, models.Person{})
 
 }

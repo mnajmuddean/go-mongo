@@ -58,7 +58,12 @@ func CreatePerson(client *mongo.Client, person models.Person) error {
 		panic(err)
 	}
 
-	fmt.Println(persons)
+	jsonBytes, err := json.MarshalIndent(persons, "", "    ")
+
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%s\n", jsonBytes)
 
 	return nil
 }
@@ -81,6 +86,8 @@ func ReadPerson(client *mongo.Client, person models.Person) error {
 		panic(err)
 	}
 
+	fmt.Println("Below is the person details that is from Hong Kong : ")
+
 	output, err := json.MarshalIndent(result, "", "    ")
 	if err != nil {
 		panic(err)
@@ -96,37 +103,50 @@ func UpdatePerson(client *mongo.Client, person models.Person) error {
 	collection := client.Database("myDB").Collection("Person")
 
 	//convert hexadecimal to objectID value
-	id, _ := primitive.ObjectIDFromHex("642e6844fa3bceb1fda83710")
-	filter := bson.D{{"_id", id}}
+	filter := bson.D{{"name", "Ali"}}
 	update := bson.D{{"$set", bson.D{{"age", 30}}}}
 
-	result, err := collection.UpdateOne(context.TODO(), filter, update)
+	_, err := collection.UpdateOne(context.TODO(), filter, update)
 
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("Documents updated: %v\n", result.ModifiedCount)
+	// Find the updated document
+	var updatedDoc Person
+	err = collection.FindOne(context.TODO(), filter).Decode(&updatedDoc)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Below is the document that have been updated :")
+	// Print the updated document in JSON format
+	output, err := json.MarshalIndent(updatedDoc, "", "    ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%s\n", output)
 
 	return nil
 }
 
-func DeletePerson(client *mongo.Client, person models.Person) error {
+func DeletePerson(client *mongo.Client, person models.Person) (interface{}, error) {
 
 	// Get a handle to the "Person" collection in the "myDB" database
 	collection := client.Database("myDB").Collection("Person")
-	id, _ := primitive.ObjectIDFromHex("642e6844fa3bceb1fda83712")
-	filter := bson.D{{"_id", id}}
+	filter := bson.D{{"name", "Muhammad Najmuddin"}}
 
 	result, err := collection.DeleteOne(context.TODO(), filter)
 
 	if err != nil {
+		fmt.Println("Delete Status : Failed")
 		panic(err)
 	}
 
-	fmt.Printf("Documents deleted: %d\n", result.DeletedCount)
+	fmt.Println("Delete Status : Success")
+	fmt.Printf("Documents successfully deleted: %d\n", result.DeletedCount)
 
-	return nil
+	return nil, nil
 }
 
 func UseQueryOperators(client *mongo.Client, person models.Person) error {
@@ -134,15 +154,14 @@ func UseQueryOperators(client *mongo.Client, person models.Person) error {
 	// Get a handle to the "Person" collection in the "myDB" database
 	collection := client.Database("myDB").Collection("Person")
 
-	filter := bson.D{{"age", bson.D{{"$lte", 24}}}}
+	filter := bson.D{{"age", bson.D{{"$lte", 25}}}}
 
-	result, err := collection.DeleteMany(context.TODO(), filter)
+	result, err := collection.CountDocuments(context.TODO(), filter)
 
 	if err != nil {
 		panic(err)
 	}
-
-	fmt.Printf("Documents deleted using query operators: %d\n", result.DeletedCount)
+	fmt.Printf("Documents count using query operators: %d\n", result)
 
 	return nil
 }
