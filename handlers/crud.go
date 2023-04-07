@@ -73,7 +73,7 @@ func ReadPerson(client *mongo.Client, person models.Person) error {
 	// Get a handle to the "Person" collection in the "myDB" database
 	collection := client.Database("myDB").Collection("Person")
 
-	filter := bson.D{{"country", "Hong Kong"}}
+	filter := bson.D{{Key: "country", Value: "Hong Kong"}}
 
 	var result Person
 	err := collection.FindOne(context.TODO(), filter).Decode(&result)
@@ -103,8 +103,8 @@ func UpdatePerson(client *mongo.Client, person models.Person) error {
 	collection := client.Database("myDB").Collection("Person")
 
 	//convert hexadecimal to objectID value
-	filter := bson.D{{"name", "Ali"}}
-	update := bson.D{{"$set", bson.D{{"age", 30}}}}
+	filter := bson.D{{Key: "name", Value: "Ali"}}
+	update := bson.D{{Key: "$set", Value: bson.D{{Key: "age", Value: 30}}}}
 
 	_, err := collection.UpdateOne(context.TODO(), filter, update)
 
@@ -134,7 +134,7 @@ func DeletePerson(client *mongo.Client, person models.Person) (interface{}, erro
 
 	// Get a handle to the "Person" collection in the "myDB" database
 	collection := client.Database("myDB").Collection("Person")
-	filter := bson.D{{"name", "Muhammad Najmuddin"}}
+	filter := bson.D{{Key: "name", Value: "Muhammad Najmuddin"}}
 
 	result, err := collection.DeleteOne(context.TODO(), filter)
 
@@ -154,7 +154,7 @@ func UseQueryOperators(client *mongo.Client, person models.Person) error {
 	// Get a handle to the "Person" collection in the "myDB" database
 	collection := client.Database("myDB").Collection("Person")
 
-	filter := bson.D{{"age", bson.D{{"$lte", 25}}}}
+	filter := bson.D{{Key: "age", Value: bson.D{{Key: "$lte", Value: 25}}}}
 
 	result, err := collection.CountDocuments(context.TODO(), filter)
 

@@ -15,14 +15,14 @@ func TestInsert(t *testing.T) {
 	col := client.Database("test").Collection("City")
 
 	doc := bson.D{
-		{"city_name", "Muar"},
-		{"state", "Johor"},
+		{Key: "city_name", Value: "Muar"},
+		{Key: "state", Value: "Johor"},
 	}
 
 	_, err := col.InsertOne(context.Background(), doc)
 	assert.NoError(t, err)
 
-	result := col.FindOne(context.Background(), bson.D{{"city_name", "Muar"}})
+	result := col.FindOne(context.Background(), bson.D{{Key: "city_name", Value: "Muar"}})
 	assert.NoError(t, result.Err())
 
 	var retrievedDoc bson.M
